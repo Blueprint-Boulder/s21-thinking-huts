@@ -66,10 +66,11 @@ class GoogleMapWebScraper:
             for result in results:
                 name = result.find(class_='section-result-title').text
                 service = result.find(class_='section-result-details').text
+                search_term = self.search_terms[i]
 
                 # Default to the seach term if no service provided was found
                 if service == '':
-                    service = search_terms[i]
+                    service = self.search_terms[i]
 
                 location = result.find(class_='section-result-location').text
                 phone = result.find(
@@ -80,7 +81,7 @@ class GoogleMapWebScraper:
                     phone = ''
 
                 business_lst.append(
-                    {'name': name, 'service': service, 'location': location, 'phone': phone})
+                    {'name': name, 'search_term': search_term, 'service': service, 'location': location, 'phone': phone})
             self.business_lst = business_lst
             i += 1
         return business_lst
@@ -89,7 +90,7 @@ class GoogleMapWebScraper:
         """
         Writes the data collected in get_sources() to a csv file
         """
-        csv_columns = ['name', 'service', 'location', 'phone']
+        csv_columns = ['name', 'search_term', 'service', 'location', 'phone']
         try:
             with open(filename, 'w') as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
@@ -102,6 +103,7 @@ class GoogleMapWebScraper:
 
 terms = ['Transportation', 'Construction', 'Furniture', 'Office', 'school supplies', 'Material', 'Concrete',
          'Mud brick', 'Thatched roofing', 'Truck', 'Freight', 'train', 'Utility', 'Electricity', 'Sewage']
+terms = ['Wood']
 scraper = GoogleMapWebScraper(terms)
 scraper.get_sources()
-scraper.write_data_to_csv('google_maps_data_Transport.csv')
+scraper.write_data_to_csv('google_maps_data_Wood.csv')

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Thinking Huts Search</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+  <body>
+      <br>
+    <div class="container">
+        <h2>Thinking Huts Search</h2>
+        <br>
+
+    <h3>Enter 1 or more search criteria then choose the csv file</h3>
+    <br>
+    <form id="myForm">
+        <label for="service">Service:</label><br>
+        <input type="text" id="service"><br><br>
+        <label for="location">Location:</label><br>
+        <input type="text" id="location"><br><br>
+        <label for="fav">Favorites Only?</label>
+        <input type="checkbox" id="fav" ><br><br>
+        <label for="fav">Select local CSV File:</label><br>
+        <input id="csv" type="file">
+    </form>
+    <br>
+    </div>
+    <br>
+
+    <div class="container" ><h3 id="businessesTitle"></h3>
+    <div id=out></div>
+
+    <script>
+
+            var fileInput = document.getElementById("csv")
+
+            readFile = function () {
+              document.getElementById("businessesTitle").innerHTML = "Businesses:";
+              var service = document.getElementById("myForm").elements[0].value;
+              var location = document.getElementById("myForm").elements[1].value;
+              var fav = document.getElementById("myForm").elements[2].checked;
+              var reader = new FileReader();
+              reader.onload = function () {
+                  var csv_file = reader.result
+                  lines = csv_file.split('\n')
+                  for(i = 0; i < lines.length;i++){
+                    line = lines[i]
+                    line_arr = line.split(',')
+                    if(line_arr.length > 1){
+                      // Make sure service matches if it was searched for
+                      if(service.length == 0 || line_arr[1].trim().toLowerCase() == service.trim().toLowerCase() || 
+                          line_arr[2].trim().toLowerCase() == service.trim().toLowerCase()){ 
+                        // Make sure location matches if it was searched for
+                        // TODO add nearby locations as well
+                        if(location.length == 0 || line_arr[3].trim().toLowerCase() == location.trim().toLowerCase()){
+                          // Make sure it is a favorite if that was searched for
+                          if(!fav || (line_arr.length > 7 && line_arr[7].trim().toLowerCase() == 'y')){
+                            // TODO format so it looks better, maybe as a table?
+                            document.getElementById("out").innerHTML += '<p>' 
+                            for(j = 0; j < line_arr.length;j++){
+                              if(line_arr[j]){
+                                document.getElementById("out").innerHTML += line_arr[j] + ' '
+                              }
+                            }
+                            document.getElementById("out").innerHTML += '</p>'
+                          }
+                        }
+                      }
+                    }
+                  }
+
+            };
+              // start reading the file. When it is done, calls the onload event defined above.
+              reader.readAsBinaryString(fileInput.files[0]);
+          };
+          fileInput.addEventListener('change', readFile);
+
+        
+    </script>
+  </body>
+</html>
+
+
