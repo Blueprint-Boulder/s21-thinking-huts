@@ -63,6 +63,7 @@
                           // Make sure it is a favorite if that was searched for
                           if(!fav || (line_arr.length > 7 && line_arr[7].trim().toLowerCase() == 'y')){
                             // TODO format so it looks better, maybe as a table?
+                            // TODO add ability to favorite business
                             document.getElementById("out").innerHTML += '<p>' 
                             for(j = 0; j < line_arr.length;j++){
                               if(line_arr[j]){
@@ -81,8 +82,6 @@
               reader.readAsBinaryString(fileInput.files[0]);
           };
           fileInput.addEventListener('change', readFile);
-
-        
     </script>
   </body>
 </html>
