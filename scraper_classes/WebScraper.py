@@ -2,12 +2,12 @@ import csv
 
 class WebScraper:
     def __init__(self):
-        self.keywords = ['Transportation', 'Construction', 'Furniture', 'Office', 
-                        'school supplies', 'Material', 'Concrete', 'Mud brick', 
-                        'Thatched roofing', 'Truck', 'Freight', 'train', 'Utility', 
-                        'Electricity', 'Sewage']
+        self.keywords = ['transportation', 'construction', 'furniture', 'office', 
+                        'school supplies', 'material', 'concrete', 'mud brick', 
+                        'thatched roofing', 'truck', 'freight', 'train', 'utility', 
+                        'electricity', 'sewage']
         self.csv_columns = ['name', 'search_term', 'service', 'location', 'phone', 'email', 'website', 'Latitude', 'Longitude', 'Favorite']
-        self.business_list = {}
+        self.business_list = []
         self.filename = "madagascar-business.csv"
     
     def write_data_to_csv(self):
