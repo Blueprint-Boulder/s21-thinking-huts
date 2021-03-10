@@ -8,32 +8,60 @@ class YellowPages1(WebScraper):
         super().__init__()
 
     def get_urls(self):
-        #TODO: make list of other URLS
-        URL = 'http://www.business-yellowpages.com/madagascar/page-4'
-        return URL
+        url_list = []
+        for i in range(1, 22):
+            url_list.append('http://www.business-yellowpages.com/madagascar/page-' + str(i))
+        return url_list
     
     def parse(self): 
         url_list = self.get_urls()
-        page = requests.get(url_list) 
-        soup = BeautifulSoup(page.content, 'html.parser')
-        results = soup.find(id='List-of-companies')
-        jobs = results.find_all('dl')
+        
+        for url in url_list:
+            page = requests.get(url) 
+            soup = BeautifulSoup(page.content, 'html.parser')
+            results = soup.find(id='List-of-companies')
+            jobs = results.find_all('dl')
 
-        #TODO: put stuff in business list dict 
-        # ['name', 'search_term', 'service', 'location', 'phone', 'email', 'website', 'Latitude', 'Longitude', 'Favorite']
-        for job in jobs:
-        #    title_elem = job_elem.find('dl', class_='title')
-        #    company_elem = job_elem.find('div', class_='company')
-        #    location_elem = job_elem.find('div', class_='location')
-            link = job.find('a')['href']
-            name = job.find('a').string
-            other_fields = job.find_all('dd')
-            print(name)
-            print(link)
-            for field in other_fields:
-                if len(field.contents) == 1:
-                    continue
-                elem = field.contents[1]
-                print(elem)
-        #    print(job.prettify())
-            print()
+            for job in jobs:
+                business = {} 
+
+                link = job.find('a')['href']
+                name = job.find('a').string
+                business["name"] = name
+                business["website"] = link 
+
+                other_fields = job.find_all('dd')
+                for field in other_fields:
+                    if len(field.contents) == 1:
+                        continue
+                    field_label = field.contents[0].find_all(text=True, recursive=False)[0]
+                    elem = field.contents[1]
+
+                    if ("Tel" in field_label):
+                        business["phone"] = elem  
+                    elif ("Address" in field_label):  
+                        formatted_loc = elem.replace("\n", " ")  
+                        formatted_loc = formatted_loc.replace("\r", "")  
+                        business["location"] = formatted_loc
+                    elif ("Main Products" in field_label):
+                        business["service"] = elem
+                    else:
+                        continue 
+
+                self.business_list.append(business)    
+        self.cleanup_business_list()
+        print(self.business_list)
+
+    def cleanup_business_list(self):
+          '''
+          Look for keywords in main products to see if business is relevant 
+          '''
+          i = 0
+          temp_business_list = self.business_list.copy()
+          for entry in temp_business_list:
+              services = entry['service']
+              services = services.lower()
+              if not any(word in services for word in self.keywords):
+                  self.business_list.remove(entry)
+
+
