@@ -27,8 +27,11 @@
         <input type="text" id="location"><br><br>
         <label for="fav">Favorites Only?</label>
         <input type="checkbox" id="fav" ><br><br>
-        <label for="fav">Select local CSV File:</label><br>
-        <input id="csv" type="file">
+        <label for="csv_business">Select business CSV File:</label><br>
+        <input id="csv_businesses" type="file"><br><br>
+        <label for="csv_favorites">Select favorite CSV File:</label><br>
+        <input id="csv_favorites" type="file"><br><br>
+        <button type='button' onclick="readFile()" id="submit">Submit</button><br>
     </form>
     <br>
     </div>
@@ -38,10 +41,59 @@
     <div id=out></div>
 
     <script>
+            var fileInput = document.getElementById("csv_businesses")
+            var fileInputFavorites = document.getElementById("csv_favorites")
+            var submit = document.getElementById("submit")
+            var favorites = [];
 
-            var fileInput = document.getElementById("csv")
+            loadFavorites = function(){
+              favorites = [];
+              var reader = new FileReader();
+              reader.onload = function () {
+                  var csv_file = reader.result
+                  lines = csv_file.split('\n')
+                  for(i = 0; i < lines.length;i++){
+                    addFav(lines[i])
+                  }
+                }
+              // start reading the file. When it is done, calls the onload event defined above.
+              reader.readAsBinaryString(fileInputFavorites.files[0]);
+            };
+
+            addFav = function (name) {
+              favorites.push(name.trim().toLowerCase())
+            }
+
+            addFavorite = function (name) {
+              addFav(name)
+              document.getElementById(name+'_fav').setAttribute('onclick', 'removeFavorite(\'' + name + '\')')
+              document.getElementById(name+'_fav').innerHTML = 'Remove Favorite'
+              console.log(favorites)
+            }
+
+            removeFavorite = function (name) {
+              favorites = favorites.filter(function(value, index, arr){ 
+                                          return !(value.valueOf() === name.trim().toLowerCase().valueOf());
+                                      });
+                                      document.getElementById(name+'_fav').setAttribute('onclick', 'addFavorite(\'' + name + '\')')
+              document.getElementById(name+'_fav').innerHTML = 'Add Favorite'
+              console.log(favorites)
+            }
+
+
+            saveFavorites = function (){
+              var csvContent = favorites.join("\n");
+              var link = window.document.createElement("a");
+              link.setAttribute("href", "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(csvContent));
+              link.setAttribute("download", "favorites.csv");
+              link.click(); 
+            }
+            
 
             readFile = function () {
+              document.getElementById("out").innerHTML = ''
+              loadFavorites()
+              document.getElementById("out").innerHTML += '<button type="button" onclick="saveFavorites()">Save Favorites</button>'
               document.getElementById("businessesTitle").innerHTML = "Businesses:";
               var service = document.getElementById("myForm").elements[0].value;
               var location = document.getElementById("myForm").elements[1].value;
@@ -61,16 +113,21 @@
                         // TODO add nearby locations as well
                         if(location.length == 0 || line_arr[3].trim().toLowerCase() == location.trim().toLowerCase()){
                           // Make sure it is a favorite if that was searched for
-                          if(!fav || (line_arr.length > 7 && line_arr[7].trim().toLowerCase() == 'y')){
+                          if(!fav || (favorites.includes(line_arr[0].trim().toLowerCase()))){
                             // TODO format so it looks better, maybe as a table?
                             // TODO add ability to favorite business
                             document.getElementById("out").innerHTML += '<p>' 
-                            for(j = 0; j < line_arr.length;j++){
+                            for(j = 0; j < line_arr.length; j++){
                               if(line_arr[j]){
                                 document.getElementById("out").innerHTML += line_arr[j] + ' '
                               }
                             }
                             document.getElementById("out").innerHTML += '</p>'
+                            if(favorites.includes(line_arr[0].trim().toLowerCase())){
+                              document.getElementById("out").innerHTML += '<button type="button" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"removeFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Remove Favorite</button>'
+                            }else{
+                              document.getElementById("out").innerHTML += '<button type="button" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"addFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Add Favorite</button>'
+                            }
                           }
                         }
                       }
@@ -81,7 +138,7 @@
               // start reading the file. When it is done, calls the onload event defined above.
               reader.readAsBinaryString(fileInput.files[0]);
           };
-          fileInput.addEventListener('change', readFile);
+          submit.addEventListener('change', readFile);
     </script>
   </body>
 </html>
