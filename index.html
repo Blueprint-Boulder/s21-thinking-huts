@@ -31,7 +31,7 @@
         <input id="csv_businesses" type="file"><br><br>
         <label for="csv_favorites">Select favorite CSV File:</label><br>
         <input id="csv_favorites" type="file"><br><br>
-        <button type='button' onclick="readFile()" id="submit">Submit</button><br>
+        <button type='button' class="btn btn-primary" onclick="readFile()" id="submit">Submit</button><br>
     </form>
     <br>
     </div>
@@ -46,6 +46,51 @@
             var submit = document.getElementById("submit")
             var favorites = [];
 
+
+            //Similarity between two strings
+            function similarity(s1, s2) {
+              var longer = s1;
+              var shorter = s2;
+              if (s1.length < s2.length) {
+                longer = s2;
+                shorter = s1;
+              }
+              var longerLength = longer.length;
+              if (longerLength == 0) {
+                return 1.0;
+              }
+              return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+            }
+
+            function editDistance(s1, s2) {
+              s1 = s1.toLowerCase();
+              s2 = s2.toLowerCase();
+
+              var costs = new Array();
+              for (var i = 0; i <= s1.length; i++) {
+                var lastValue = i;
+                for (var j = 0; j <= s2.length; j++) {
+                  if (i == 0)
+                    costs[j] = j;
+                  else {
+                    if (j > 0) {
+                      var newValue = costs[j - 1];
+                      if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                        newValue = Math.min(Math.min(newValue, lastValue),
+                          costs[j]) + 1;
+                      costs[j - 1] = lastValue;
+                      lastValue = newValue;
+                    }
+                  }
+                }
+                if (i > 0)
+                  costs[s2.length] = lastValue;
+              }
+              return costs[s2.length];
+            }
+
+
+            //load the favorites in the file
             loadFavorites = function(){
               favorites = [];
               var reader = new FileReader();
@@ -57,7 +102,7 @@
                   }
                 }
               // start reading the file. When it is done, calls the onload event defined above.
-              reader.readAsBinaryString(fileInputFavorites.files[0]);
+              reader.readAsText(fileInputFavorites.files[0],'ISO-8859-1');
             };
 
             addFav = function (name) {
@@ -93,7 +138,10 @@
             readFile = function () {
               document.getElementById("out").innerHTML = ''
               loadFavorites()
-              document.getElementById("out").innerHTML += '<button type="button" onclick="saveFavorites()">Save Favorites</button>'
+              document.getElementById("out").innerHTML += '<button type="button" onclick="saveFavorites()">Save Favorites</button><br><br>'
+              document.getElementById("out").innerHTML += '<table id="table" class="table"> </table>'
+              document.getElementById("table").innerHTML += '<thead><tr> <th> Name </th> <th> Search Term </th> <th> Service </th> <th> Location </th> <th> Phone </th> <th> Email </th> <th> Website </th> <th> Latitude </th> <th> Longitude </th> <th> Toggle Favorite </th> </tr> </thead>'    
+              document.getElementById("table").innerHTML += '<tbody id="tb"></tbody>'    
               document.getElementById("businessesTitle").innerHTML = "Businesses:";
               var service = document.getElementById("myForm").elements[0].value;
               var location = document.getElementById("myForm").elements[1].value;
@@ -107,27 +155,26 @@
                     line_arr = line.split(',')
                     if(line_arr.length > 1){
                       // Make sure service matches if it was searched for
-                      if(service.length == 0 || line_arr[1].trim().toLowerCase() == service.trim().toLowerCase() || 
-                          line_arr[2].trim().toLowerCase() == service.trim().toLowerCase()){ 
+                      if(service.length == 0 || similarity(line_arr[1].trim().toLowerCase(),service.trim().toLowerCase()) > 0.6 || 
+                          similarity(line_arr[2].trim().toLowerCase(),service.trim().toLowerCase()) > 0.6){ 
                         // Make sure location matches if it was searched for
                         // TODO add nearby locations as well
-                        if(location.length == 0 || line_arr[3].trim().toLowerCase() == location.trim().toLowerCase()){
+                        if(location.length == 0 || similarity(line_arr[3].trim().toLowerCase(),location.trim().toLowerCase()) > 0.6){
                           // Make sure it is a favorite if that was searched for
                           if(!fav || (favorites.includes(line_arr[0].trim().toLowerCase()))){
                             // TODO format so it looks better, maybe as a table?
-                            // TODO add ability to favorite business
-                            document.getElementById("out").innerHTML += '<p>' 
+                            document.getElementById("tb").innerHTML += '<tr id="' + line_arr[0].trim().toLowerCase() + '_row"></tr>' 
+                            document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML = ''
                             for(j = 0; j < line_arr.length; j++){
-                              if(line_arr[j]){
-                                document.getElementById("out").innerHTML += line_arr[j] + ' '
-                              }
+                                document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML += '<td>' + line_arr[j] + '</td>'
                             }
-                            document.getElementById("out").innerHTML += '</p>'
+                            
                             if(favorites.includes(line_arr[0].trim().toLowerCase())){
-                              document.getElementById("out").innerHTML += '<button type="button" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"removeFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Remove Favorite</button>'
+                              document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML += '<td> <button type="button" class="btn btn-secondary" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"removeFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Remove Favorite</button> </td>'
                             }else{
-                              document.getElementById("out").innerHTML += '<button type="button" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"addFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Add Favorite</button>'
+                              document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML += '<td> <button type="button"  class="btn btn-secondary" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"addFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Add Favorite</button> </td>'
                             }
+                            
                           }
                         }
                       }
@@ -136,7 +183,7 @@
 
             };
               // start reading the file. When it is done, calls the onload event defined above.
-              reader.readAsBinaryString(fileInput.files[0]);
+              reader.readAsText(fileInput.files[0],'ISO-8859-1');
           };
           submit.addEventListener('change', readFile);
     </script>
