@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 import csv
 
 class YellowPages1(WebScraper):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, keywords):
+        super().__init__(keywords)
 
     def get_urls(self):
         url_list = []
@@ -50,7 +50,6 @@ class YellowPages1(WebScraper):
 
                 self.business_list.append(business)    
         self.cleanup_business_list()
-        print(self.business_list)
 
     def cleanup_business_list(self):
           '''
