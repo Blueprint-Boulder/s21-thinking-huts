@@ -1,24 +1,32 @@
-from selenium import webdriver
 from bs4 import BeautifulSoup
-import time
 import csv
 
 from WebScraper import WebScraper 
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
+import time
 
-class GoogleMapWebScraper(WebScraper):
 
-    def __init__(self, coordinates=(-19.8292149, 45.5268368), zoom=6.91, phone_extension='+261'):
+class GoogleMapScraper(WebScraper):
+
+    def __init__(self, wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91, phone_extension='+261'):
         
         super().__init__()
 
+        self.wait_time = wait_time
         self.coordinates = coordinates
         self.zoom = zoom
         self.url_list = self.get_urls()
         self.browser = webdriver.Chrome(
             'C:/Users/jazka/Documents/chromedriver.exe')
-        self.business_list = []
         self.phone_extension = phone_extension
+        self.business_url_tuples = []
+        
 
     def get_urls(self):
         """
@@ -38,24 +46,19 @@ class GoogleMapWebScraper(WebScraper):
 
         return urls
 
-    def parse(self):
-        """
-        Scrape sources from the given google maps url of a search at a given location. For each company, 
-        get the name, service provided, location, and phone number if available.
-        """
-        business_list = []
+    def get_business_urls(self):
         i = 0
         for url in self.url_list:
             self.browser.get(url)
 
-            time.sleep(3)
+            time.sleep(self.wait_time)
             try:
                 # Zoom in so that "Search this area" button will show up
                 self.browser.find_element_by_id('widget-zoom-in').click()
             except:
                 print("Zoom didn't load, try increasing the wait time")
 
-            time.sleep(3)
+            time.sleep(self.wait_time)
 
             try:
                 # Must hit  "Search this area", otherwise Google defaults to local locations
@@ -64,40 +67,68 @@ class GoogleMapWebScraper(WebScraper):
             except:
                 print("Search This Area button didn't load, try increasing the wait time")
 
-
-            time.sleep(3)
-
-            htmlstring = self.browser.page_source
-            soup = BeautifulSoup(htmlstring, "html.parser")
-            results = soup.find_all(class_='section-result-content')
-
-            for result in results:
-                name = result.find(class_='section-result-title').text
-                service = result.find(class_='section-result-details').text
-                search_term = self.keywords[i]
-
-                # Default to the seach term if no service provided was found
-                if service == '':
-                    service = self.keywords[i]
-
-                location = result.find(class_='section-result-location').text
-                phone = result.find(
-                    class_='section-result-info section-result-phone-number').text.strip()
-
-                # Get rid of phone numbers with the wrong extension. These may come from your ip address location!
-                if phone[0:len(self.phone_extension)] != self.phone_extension:
-                    phone = ''
-                
-                if len(phone) > 0:
-                    phone = phone[0:-1]
-
-                business_list.append(
-                    {'name': name, 'search_term': search_term, 'service': service, 'location': location, 'phone': phone})
-            self.business_list = business_list
+            while True:
+                time.sleep(self.wait_time)
+                elements = self.browser.find_elements_by_xpath('//a')
+                # self.browser.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight",element)
+                for element in elements:
+                    try:
+                        url = element.get_attribute('href')
+                        if 'https://www.google.com/maps/place' in url:
+                            self.business_url_tuples.append((url,self.keywords[i]))
+                    except:
+                        pass
+                try:
+                    nxt_btn = self.browser.find_element_by_id('n7lv7yjyC35__section-pagination-button-next')
+                except:
+                    break
+                if nxt_btn.get_attribute("disabled") == 'true':
+                    break
+                try:
+                    nxt_btn.click()
+                except:
+                    break
             i += 1
-        return business_list
 
+    def parse(self):
+        """
+        Scrape sources from the given google maps url of a search at a given location. For each company, 
+        get the name, service provided, location, and phone number if available.
+        """
+        for url_tuple in self.business_url_tuples:
+            self.browser.get(url_tuple[0])
+            time.sleep(self.wait_time)
+            
+            try:
+                rating = scraper.browser.find_element_by_class_name("section-star-display").text
+            except:
+                rating = ''
+            try:
+                service = scraper.browser.find_element_by_class_name('section-rating').text.split('\n')[-1]
+            except:
+                service = ''
+            try:
+                name = scraper.browser.find_element_by_class_name("section-hero-header-title-title").text
+            except:
+                name = ''
+            try:
+                address = scraper.browser.find_element_by_css_selector("[data-item-id='address']").text.replace(',', '')
+            except:
+                address = ''
+            try:
+                phone_number = scraper.browser.find_element_by_css_selector("[data-tooltip='Copy phone number']").text
+            except:
+                phone_number = ''
+            try:
+                website = scraper.browser.find_element_by_css_selector("[data-item-id='authority']").text
+            except:
+                website = ''
+            self.business_list.append(
+                     {'name': name, 'search_term': url_tuple[1], 'service': service, 'location': address, 'phone': phone_number,'rating':rating,'website':website})
+
+            
 if __name__ == "__main__":
-    scraper = GoogleMapWebScraper()
+    scraper = GoogleMapScraper(wait_time=5)
+    scraper.get_business_urls()
     scraper.parse()
     scraper.write_data_to_csv()

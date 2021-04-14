@@ -5,8 +5,10 @@ class WebScraper:
         self.keywords = ['transportation', 'construction', 'furniture', 'office', 
                         'school supplies', 'material', 'concrete', 'mud brick', 
                         'thatched roofing', 'truck', 'freight', 'train', 'utility', 
-                        'electricity', 'sewage']
-        self.csv_columns = ['name', 'search_term', 'service', 'location', 'phone', 'email', 'website', 'Latitude', 'Longitude', 'Favorite']
+                        'electricity', 'sewage','building materials', 'hardware', 
+                        'wood', 'roofs','solar panel', 'water tank','crane','plumbing',
+                        'artisan','hotel','taxi']
+        self.csv_columns = ['name', 'search_term', 'service', 'location', 'phone', 'email', 'website', 'latitude', 'longitude', 'rating']
         self.business_list = []
         self.filename = "madagascar-business.csv"
     
