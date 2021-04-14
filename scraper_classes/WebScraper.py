@@ -2,15 +2,14 @@ import csv
 
 class WebScraper:
     def __init__(self):
-        self.keywords = ['transportation', 'construction', 'furniture', 'office', 
-                        'school supplies', 'material', 'concrete', 'mud brick', 
-                        'thatched roofing', 'truck', 'freight', 'train', 'utility', 
-                        'electricity', 'sewage','building materials', 'hardware', 
-                        'wood', 'roofs','solar panel', 'water tank','crane','plumbing',
-                        'artisan','hotel','taxi']
+        self.keywords = keywords
         self.csv_columns = ['name', 'search_term', 'service', 'location', 'phone', 'email', 'website', 'latitude', 'longitude', 'rating']
         self.business_list = []
         self.filename = "madagascar-business.csv"
+        self.url_list = []
+    
+    def set_keywords(self, keywords):
+        self.keywords = keywords
     
     def write_data_to_csv(self):
         try:
