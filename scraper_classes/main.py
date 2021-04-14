@@ -3,11 +3,11 @@ from YellowPages2 import YellowPages2
 
 def mainFunction():
     keywords = ['transportation', 'construction', 'furniture', 'office', 
-                'school supplies', 'material', 'concrete', 'mud brick', 
-                'thatched roofing', 'truck', 'freight', 'train', 'utility', 
-                'electricity', 'sewage', 'building materials', 'hardware', 'wood', 'roofs']
-    
-
+                        'school supplies', 'material', 'concrete', 'mud brick', 
+                        'thatched roofing', 'truck', 'freight', 'train', 'utility', 
+                        'electricity', 'sewage','building materials', 'hardware', 
+                        'wood', 'roofs','solar panel', 'water tank','crane','plumbing',
+                        'artisan','hotel','taxi']
     yellow_pages1 = YellowPages1(keywords)
     yellow_pages1.parse() 
     yellow_pages1.write_data_to_csv()

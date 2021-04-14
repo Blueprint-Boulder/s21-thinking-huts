@@ -128,7 +128,13 @@ class GoogleMapScraper(WebScraper):
 
             
 if __name__ == "__main__":
-    scraper = GoogleMapScraper(wait_time=5)
+    keywords = ['transportation', 'construction', 'furniture', 'office', 
+                        'school supplies', 'material', 'concrete', 'mud brick', 
+                        'thatched roofing', 'truck', 'freight', 'train', 'utility', 
+                        'electricity', 'sewage','building materials', 'hardware', 
+                        'wood', 'roofs','solar panel', 'water tank','crane','plumbing',
+                        'artisan','hotel','taxi']
+    scraper = GoogleMapScraper(keywords,wait_time=5)
     scraper.get_business_urls()
     scraper.parse()
     scraper.write_data_to_csv()
