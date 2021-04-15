@@ -75,5 +75,5 @@ gem = GemScraper('')
 gem.parse()
 # Parse each individual business page
 gem.parseBusinessPages()
-# Return accumulated business page
+# Return list of businesses and their info
 gem.getBusinessList
