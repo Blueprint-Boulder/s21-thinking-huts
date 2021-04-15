@@ -15,7 +15,7 @@ class GemScraper(WebScraper):
 
     def parse(self): 
 
-        browser = webdriver.Chrome('/Users/sahandsetareh/Downloads/chromedriver')
+        browser = webdriver.Chrome('') # Take in chromedriver directory
         browser.get('http://www.gem-madagascar.com/membres')
 
         html_string = browser.page_source
@@ -38,7 +38,7 @@ class GemScraper(WebScraper):
 
             business = dict()
 
-            browser = webdriver.Chrome('/Users/sahandsetareh/Downloads/chromedriver')
+            browser = webdriver.Chrome('') # Take in chromedriver directory
             browser.get(business_webpage)
 
             html_string = browser.page_source
