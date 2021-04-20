@@ -13,7 +13,7 @@ def mainFunction():
     yellow_pages1.write_data_to_csv()
     yellow_pages2 = YellowPages2(keywords)
     yellow_pages2.parse()
-    yellow_pages2.write_data_to_csv()
+    yellow_pages2.append_data_to_csv()
 
 if __name__ == "__main__":
     mainFunction()
