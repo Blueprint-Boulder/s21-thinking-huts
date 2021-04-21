@@ -14,7 +14,7 @@ import time
 
 class GoogleMapScraper(WebScraper):
 
-    def __init__(self, wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91, phone_extension='+261'):
+    def __init__(self, wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91):
         
         super().__init__()
 
@@ -24,7 +24,6 @@ class GoogleMapScraper(WebScraper):
         self.url_list = self.get_urls()
         self.browser = webdriver.Chrome(
             'C:/Users/jazka/Documents/chromedriver.exe')
-        self.phone_extension = phone_extension
         self.business_url_tuples = []
         
 

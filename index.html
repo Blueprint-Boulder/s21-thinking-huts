@@ -143,8 +143,8 @@
               document.getElementById("table").innerHTML += '<thead><tr> <th> Name </th> <th> Search Term </th> <th> Service </th> <th> Location </th> <th> Phone </th> <th> Email </th> <th> Website </th> <th> Latitude </th> <th> Longitude </th> <th> Rating </th> <th> Toggle Favorite </th> </tr> </thead>'    
               document.getElementById("table").innerHTML += '<tbody id="tb"></tbody>'    
               document.getElementById("businessesTitle").innerHTML = "Businesses:";
-              var service = document.getElementById("myForm").elements[0].value;
-              var location = document.getElementById("myForm").elements[1].value;
+              var service = document.getElementById("myForm").elements[0].value.trim().toLowerCase();
+              var location = document.getElementById("myForm").elements[1].value.trim().toLowerCase();
               var fav = document.getElementById("myForm").elements[2].checked;
               var reader = new FileReader();
               reader.onload = function () {
@@ -155,24 +155,37 @@
                     line_arr = line.split(',')
                     if(line_arr.length > 1){
                       // Make sure service matches if it was searched for
-                      if(service.length == 0 || similarity(line_arr[1].trim().toLowerCase(),service.trim().toLowerCase()) > 0.6 || 
-                          similarity(line_arr[2].trim().toLowerCase(),service.trim().toLowerCase()) > 0.6){ 
+                      business_name = line_arr[0].trim().toLowerCase()
+                      business_search_term = line_arr[1].trim().toLowerCase()
+                      business_service = line_arr[2].trim().toLowerCase()
+                      business_location = line_arr[3].trim().toLowerCase()
+
+                      if(service.length == 0 
+                          || similarity(business_search_term,service) > 0.6 
+                          || similarity(business_service,service) > 0.6 
+                          || (service.indexOf(business_search_term) >= 0 && business_search_term.length > 0)
+                          || (service.indexOf(business_service) >= 0 && business_service.length > 0)
+                          || business_search_term.indexOf(service) >= 0 
+                          || business_service.indexOf(service) >= 0){ 
                         // Make sure location matches if it was searched for
                         // TODO add nearby locations as well
-                        if(location.length == 0 || similarity(line_arr[3].trim().toLowerCase(),location.trim().toLowerCase()) > 0.6){
+                        if(location.length == 0 
+                            || similarity(business_location,location) > 0.6 
+                            || (location.indexOf(business_location) >= 0 && business_location.length > 0)
+                            || business_location.indexOf(location) >= 0){
                           // Make sure it is a favorite if that was searched for
-                          if(!fav || (favorites.includes(line_arr[0].trim().toLowerCase()))){
+                          if(!fav || (favorites.includes(business_name))){
                             // TODO format so it looks better, maybe as a table?
-                            document.getElementById("tb").innerHTML += '<tr id="' + line_arr[0].trim().toLowerCase() + '_row"></tr>' 
-                            document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML = ''
+                            document.getElementById("tb").innerHTML += '<tr id="' + business_name + '_row"></tr>' 
+                            document.getElementById(business_name+ '_row').innerHTML = ''
                             for(j = 0; j < line_arr.length; j++){
-                                document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML += '<td>' + line_arr[j] + '</td>'
+                                document.getElementById(business_name + '_row').innerHTML += '<td>' + line_arr[j] + '</td>'
                             }
                             
-                            if(favorites.includes(line_arr[0].trim().toLowerCase())){
-                              document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML += '<td> <button type="button" class="btn btn-secondary" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"removeFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Remove Favorite</button> </td>'
+                            if(favorites.includes(business_name)){
+                              document.getElementById(business_name + '_row').innerHTML += '<td> <button type="button" class="btn btn-secondary" id="' + business_name + '_fav" onclick=\"removeFavorite(\'' + business_name + '\')\">Remove Favorite</button> </td>'
                             }else{
-                              document.getElementById(line_arr[0].trim().toLowerCase() + '_row').innerHTML += '<td> <button type="button"  class="btn btn-secondary" id="' + line_arr[0].trim().toLowerCase() + '_fav" onclick=\"addFavorite(\'' + line_arr[0].trim().toLowerCase() + '\')\">Add Favorite</button> </td>'
+                              document.getElementById(business_name+ '_row').innerHTML += '<td> <button type="button"  class="btn btn-secondary" id="' + business_name + '_fav" onclick=\"addFavorite(\'' + business_name + '\')\">Add Favorite</button> </td>'
                             }
                             
                           }
