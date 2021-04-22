@@ -8,12 +8,18 @@ class YellowPages1(WebScraper):
         super().__init__(keywords)
 
     def get_urls(self):
+        '''
+          Compile a list of all urls to search 
+        '''
         url_list = []
         for i in range(1, 22):
             url_list.append('http://www.business-yellowpages.com/madagascar/page-' + str(i))
         return url_list
     
     def parse(self): 
+        '''
+          Parse and get business dictionaries from all URLs in url_list
+        '''
         url_list = self.get_urls()
         
         for url in url_list:

@@ -16,6 +16,9 @@ class YellowPages2(WebScraper):
         super().__init__(keywords)
 
     def get_urls(self):
+        '''
+          Parses main Madagascar business page and gets all URLs from relevant business categories based on keywords 
+        '''
         temp_url_list = []
         WEBSITE_PREFIX = "https://www.yellowpagesofafrica.com"
 
@@ -33,24 +36,40 @@ class YellowPages2(WebScraper):
                 temp_url_list.append((title, link))
 
         # clean list to match keywords
+        keyword_to_url = []
         for (name, website) in temp_url_list:
             if any(word in name for word in self.keywords):
+                match = ""
+                for word in self.keywords:
+                    if (word in name or word in website):
+                        match = word
+                        break; 
                 self.url_list.append(WEBSITE_PREFIX + website)
+                keyword_to_url.append((WEBSITE_PREFIX + website, match))
+        return keyword_to_url
     
     def parse(self): 
+        '''
+          Composes mini list of URLs depending on number of search results 
+          Parses all URLs and compiles business dictionary 
+        '''
         # url list is by category 
-        self.get_urls()
+        keyword_to_url = self.get_urls()
 
         options = Options()
         options.headless = True
         options.add_argument("--window-size=1920,1200")
 
-        DRIVER_PATH = '/Users/cathleen/Downloads/chromedriver'
+        # TODO: insert path to chromedriver below i.e. <path to chromedriver>/chromedriver
+        DRIVER_PATH = # insert path to chromedriver here 
         browser = webdriver.Chrome(executable_path=DRIVER_PATH, options = options)
+        j = 0
+        service = ""; 
 
         for url in self.url_list: 
             print(url)
             browser.get(url + "start-1/") 
+            service = keyword_to_url[j][1] # get matching keyword for that url
 
             # get all results page from that category 
             resultNum = browser.find_element_by_xpath("//h2[contains(@class, 'text-uppercase ct-u-marginBottom10')]")
@@ -60,8 +79,6 @@ class YellowPages2(WebScraper):
             search_pages.append(url + "start-1/")
             for i in range(1, int(numResultPages)):
                 search_pages.append(url + "start-" + str(i) + "1/")
-
-            service = url[57:-1]
             
             for page in search_pages: 
                 # parse page 
@@ -75,12 +92,13 @@ class YellowPages2(WebScraper):
                 START_KEYWORD = "See"
                 END_KEYWORD = "emails"
 
+                # need to scroll down and click dynamic content to see contact information
                 for btn in show_info_btn:
                     coordinates = btn.location_once_scrolled_into_view 
                     browser.execute_script('window.scrollTo({}, {});'.format(coordinates['x'], coordinates['y']))
-                    time.sleep(1)
+                    time.sleep(2)
                     btn.click()
-                    time.sleep(1)
+                    time.sleep(2)
 
                 contact_info = browser.find_elements_by_xpath("//*[contains(@id, 'coordonnees')]")
 
@@ -102,6 +120,7 @@ class YellowPages2(WebScraper):
                     
                     i+=1
                     self.business_list.append(business)
+            j+=1
         print(len(self.business_list))
         browser.quit()
         
