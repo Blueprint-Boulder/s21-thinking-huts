@@ -13,17 +13,17 @@ import time
 
 
 class GoogleMapScraper(WebScraper):
+    """ Class to scrape data from Google Maps """
 
-    def __init__(self, wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91):
+    def __init__(self, keywords, chrome_driver_extension='../chromedriver.exe',wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91):
         
-        super().__init__()
+        super().__init__(keywords)
 
-        self.wait_time = wait_time
-        self.coordinates = coordinates
-        self.zoom = zoom
-        self.url_list = self.get_urls()
-        self.browser = webdriver.Chrome(
-            'C:/Users/jazka/Documents/chromedriver.exe')
+        self.wait_time = wait_time # Increase for slow connections
+        self.coordinates = coordinates # Lat, Long where to search
+        self.zoom = zoom # Zoom level to search at. Will zoom in one level from here
+        self.url_list = self.get_urls() 
+        self.browser = webdriver.Chrome(chrome_driver_extension)
         self.business_url_tuples = []
         
 
@@ -46,6 +46,7 @@ class GoogleMapScraper(WebScraper):
         return urls
 
     def get_business_urls(self):
+        """ Get the urls for each business from the menus of all the businesses """
         i = 0
         for url in self.url_list:
             self.browser.get(url)
@@ -68,8 +69,9 @@ class GoogleMapScraper(WebScraper):
 
             while True:
                 time.sleep(self.wait_time)
+
+                # Get all urls that match a buisness page on Google Maps
                 elements = self.browser.find_elements_by_xpath('//a')
-                # self.browser.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight",element)
                 for element in elements:
                     try:
                         url = element.get_attribute('href')
@@ -77,6 +79,8 @@ class GoogleMapScraper(WebScraper):
                             self.business_url_tuples.append((url,self.keywords[i]))
                     except:
                         pass
+
+                # Try hitting the next button. If it fails, then move on to the next search term
                 try:
                     nxt_btn = self.browser.find_element_by_id('n7lv7yjyC35__section-pagination-button-next')
                 except:
