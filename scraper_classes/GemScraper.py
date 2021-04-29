@@ -59,7 +59,7 @@ class GemScraper(WebScraper):
             # Phone Number
             business['phone'] = business_info.find_all('td')[3].get_text().strip()
             # Fax 
-            # business['Fax'] = business_info.find_all('td')[5].get_text().strip()
+            business['fax'] = business_info.find_all('td')[5].get_text().strip()
             # Email 
             business['email'] = business_info.find_all('td')[7].get_text().strip()
             # Website
