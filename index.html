@@ -112,21 +112,24 @@
 
             addFavorite = function (name) {
               addFav(name)
+
+              // Swap the button to remove favorite instead of add
               document.getElementById(name.split(' ').join('_')+'_fav').setAttribute('onclick', 'removeFavorite(\'' + name + '\')')
               document.getElementById(name.split(' ').join('_')+'_fav').innerHTML = 'Remove Favorite'
-              console.log(favorites)
             }
 
             removeFavorite = function (name) {
+              // Remove favorite
               favorites = favorites.filter(function(value, index, arr){ 
                                           return !(value.valueOf() === name.trim().toLowerCase().split(' ').join('_').valueOf());
-                                      });
-                                      document.getElementById(name.split(' ').join('_')+'_fav').setAttribute('onclick', 'addFavorite(\'' + name + '\')')
+                                        });
+                                        
+              // Swap the button to add favorite instead of remove
+              document.getElementById(name.split(' ').join('_')+'_fav').setAttribute('onclick', 'addFavorite(\'' + name + '\')')
               document.getElementById(name.split(' ').join('_')+'_fav').innerHTML = 'Add Favorite'
-              console.log(favorites)
             }
 
-
+            // Download favorites file for use next time
             saveFavorites = function (){
               var csvContent = favorites.join("\n");
               var link = window.document.createElement("a");
@@ -142,7 +145,10 @@
               loadFavorites()
               document.getElementById("out").innerHTML += '<button type="button" onclick="saveFavorites()">Save Favorites</button><br><br>'
               document.getElementById("out").innerHTML += '<table id="table" class="table"> </table>'
+
+              // Output table header
               document.getElementById("table").innerHTML += '<thead><tr> <th> Name </th> <th> Search Term </th> <th> Service </th> <th> Location </th> <th> Phone </th> <th> Email </th> <th> Website </th> <th> Rating </th> <th> Toggle Favorite </th> </tr> </thead>'    
+
               document.getElementById("table").innerHTML += '<tbody id="tb"></tbody>'    
               document.getElementById("businessesTitle").innerHTML = "Businesses:";
               var service = document.getElementById("myForm").elements[0].value.trim().toLowerCase();
@@ -150,30 +156,26 @@
               var fav = document.getElementById("myForm").elements[2].checked;
               var reader = new FileReader();
               reader.onload = function () {
-                  var csv_file = reader.result
-                  
+                  var csv_file = reader.result  
                   var json_file = Papa.parse(csv_file, {skipEmptyLines:true,encoding:'ISO-8859-2'})
-                  // lines = csv_file.split('\n')
-                  // headers = lines[0]
-                  // header_arr = headers.split(',')
                   var header_index = {}
+
+                  // Get ordering of columns based on the header line
                   header_arr = json_file.data[0]
                   for(j = 0; j < header_arr.length;j++){
                       header_index[header_arr[j].trim().toLowerCase()] = j
                   }
+
+                  // Read csv file and find matches
                   for(i = 1; i < json_file.data.length;i++){
                     line_arr = json_file.data[i]
                     if(line_arr.length > 1){
-                      // Make sure service matches if it was searched for
-                      // business_name = line_arr[0].trim().toLowerCase()
-                      // business_search_term = line_arr[1].trim().toLowerCase()
-                      // business_service = line_arr[2].trim().toLowerCase()
-                      // business_location = line_arr[3].trim().toLowerCase()
                       business_name = line_arr[header_index['name']].trim().toLowerCase()
                       business_search_term = line_arr[header_index['search_term']].trim().toLowerCase()
                       business_service = line_arr[header_index['service']].trim().toLowerCase()
                       business_location = line_arr[header_index['location']].trim().toLowerCase()
 
+                      // Make sure service matches if it was searched for. Could be a similar word, subword, or superword
                       if(service.length == 0 
                           || similarity(business_search_term,service) > 0.6 
                           || similarity(business_service,service) > 0.6 
@@ -181,20 +183,18 @@
                           || (service.indexOf(business_service) >= 0 && business_service.length > 0)
                           || business_search_term.indexOf(service) >= 0 
                           || business_service.indexOf(service) >= 0){ 
-                        // Make sure location matches if it was searched for
-                        // TODO add nearby locations as well
+
+                        // Make sure location matches if it was searched for. Could be a similar word, subword, or superword
                         if(location.length == 0 
                             || similarity(business_location,location) > 0.6 
                             || (location.indexOf(business_location) >= 0 && business_location.length > 0)
                             || business_location.indexOf(location) >= 0){
                           // Make sure it is a favorite if that was searched for
                           if(!fav || (favorites.includes(business_name.split(' ').join('_')))){
-                            // TODO format so it looks better, maybe as a table?
+
+                            // Write a row in the table for the matched business
                             document.getElementById("tb").innerHTML += '<tr id="' + business_name.split(' ').join('_') + '_row"></tr>' 
                             document.getElementById(business_name.split(' ').join('_')+ "_row").innerHTML = ""
-                            // for(j = 0; j < line_arr.length; j++){
-                            //     document.getElementById(business_name + '_row').innerHTML += '<td>' + line_arr[j] + '</td>'
-                            // }
                             document.getElementById(business_name.split(' ').join('_') + '_row').innerHTML += '<td>' + line_arr[header_index['name']] + '</td>' + '<td>' + line_arr[header_index['search_term']] + '</td>' + '<td>' + line_arr[header_index['service']] + '</td>' +'<td>' + line_arr[header_index['location']] + '</td>' + '<td>' + line_arr[header_index['phone']] + '</td>' + '<td>' + line_arr[header_index['email']] + '</td>' + '<td>' + line_arr[header_index['website']] + '</td>'+ '<td>' + line_arr[header_index['rating']] + '</td>'
                             
                             if(favorites.includes(business_name.split(' ').join('_'))){
@@ -215,7 +215,7 @@
           };
           submit.addEventListener('change', readFile);
 
-          console.log('Running Papa Parse StackOverflow example..');
+          console.log('Parsing CSV..');
 
     function load_papa_parse()
     {
