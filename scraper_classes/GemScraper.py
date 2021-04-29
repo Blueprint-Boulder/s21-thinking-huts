@@ -53,17 +53,17 @@ class GemScraper(WebScraper):
                 name += element.get_text() + " "
             
             # Name
-            business['Name'] = name
+            business['name'] = name
             # Address 
-            business['Address'] = business_info.find_all('td')[1].get_text().strip()
+            business['location'] = business_info.find_all('td')[1].get_text().strip()
             # Phone Number
-            business['Phone Number'] = business_info.find_all('td')[3].get_text().strip()
+            business['phone'] = business_info.find_all('td')[3].get_text().strip()
             # Fax 
-            business['Fax'] = business_info.find_all('td')[5].get_text().strip()
+            # business['Fax'] = business_info.find_all('td')[5].get_text().strip()
             # Email 
-            business['Email'] = business_info.find_all('td')[7].get_text().strip()
+            business['email'] = business_info.find_all('td')[7].get_text().strip()
             # Website
-            business['Website'] = business_info.find_all('td')[9].get_text().strip()
+            business['website'] = business_info.find_all('td')[9].get_text().strip()
 
             self.business_list.append(business)
 
