@@ -11,7 +11,6 @@ class LinkedInScraper(WebScraper):
 
 	def __init__(self, keywords,chromedriver_path = './chromedriver-mac.exe', chrome_extension_path = './salesql-browser-extension-v4.0.1'):
 		super().__init__(keywords)
-		#self.profile_information = []
 		self.option = webdriver.ChromeOptions()
 		self.option.add_argument('--load-extension=' + chrome_extension_path)
 		self.driver = webdriver.Chrome(chromedriver_path,options = self.option)
@@ -36,7 +35,7 @@ class LinkedInScraper(WebScraper):
 
 
 	def loginToLinkedIn(self):
-		# #opens up another tab to log in to linkedin 
+		#logs in to linkedin 
 		LinkedinUN = 'hastingsj890@gmail.com'
 		password = 'email1234#'
 		self.driver.get('https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin')
@@ -59,7 +58,7 @@ class LinkedInScraper(WebScraper):
 		#checks see if the item already exists in the list 
 		if len(results) > 0:
 			if item in results:
-					return True
+				return True
 		return False		
 
 
@@ -85,7 +84,6 @@ class LinkedInScraper(WebScraper):
 	def googleUrlSearch(self,URL,keyword):
 		#scrapes revelant linkedin profiles based on keyword passed and returns the information about the company or person in a list of dictionaries 
 		self.driver.get(URL)
-		#self.driver.switch_to.window(self.driver.window_handles[-1])
 		html = self.driver.page_source
 		search_result = BeautifulSoup(html.encode("utf-8"), "html.parser")
 		search_result.prettify()
