@@ -1,0 +1,6 @@
+@font-face{font-family:'Font Awesome 5 Brands';font-style:normal;font-weight:400;src:url(https://salesql.s3.eu-central-1.amazonaws.com/ext/fonts/fa-brands-400.woff2) format("woff2"),url(chrome-extension://__MSG_@@extension_id__/fonts/fa-brands-400.woff) format("woff")}
+@font-face{font-family:'Font Awesome 5 Pro';font-style:normal;font-weight:400;src:url(https://salesql.s3.eu-central-1.amazonaws.com/ext/fonts/fa-regular-400.woff2) format("woff2"),url(chrome-extension://__MSG_@@extension_id__/fonts/fa-regular-400.woff) format("woff")}
+
+body {
+    font-family: 'muli', sans-serif !important;
+}
