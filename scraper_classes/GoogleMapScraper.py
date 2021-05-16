@@ -15,7 +15,7 @@ import time
 class GoogleMapScraper(WebScraper):
     """ Class to scrape data from Google Maps """
 
-    def __init__(self, keywords, chrome_driver_path='../chromedriver.exe',wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91):
+    def __init__(self, keywords, chrome_driver_path='chromedriver.exe',wait_time=3, coordinates=(-19.8292149, 45.5268368), zoom=6.91):
         
         super().__init__(keywords)
 

@@ -70,10 +70,11 @@ class GemScraper(WebScraper):
             time.sleep(1) 
             browser.quit()
 
-gem = GemScraper('')
-# Grabs all business URLs
-gem.parse()
-# Parse each individual business page
-gem.parseBusinessPages()
-# Return list of businesses and their info
-gem.getBusinessList
+if __name__ == '__main__':
+    gem = GemScraper('')
+    # Grabs all business URLs
+    gem.parse()
+    # Parse each individual business page
+    gem.parseBusinessPages()
+    # Return list of businesses and their info
+    gem.getBusinessList
