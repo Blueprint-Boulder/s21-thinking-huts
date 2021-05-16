@@ -147,7 +147,7 @@
               document.getElementById("out").innerHTML += '<table id="table" class="table"> </table>'
 
               // Output table header
-              document.getElementById("table").innerHTML += '<thead><tr> <th> Name </th> <th> Search Term </th> <th> Service </th> <th> Location </th> <th> Phone </th> <th> Email </th> <th> Website </th> <th> Rating </th> <th> Toggle Favorite </th> </tr> </thead>'    
+              document.getElementById("table").innerHTML += '<thead><tr> <th> Name </th> <th> Search Term </th> <th> Service </th> <th> Location </th> <th> Phone </th> <th> Fax </th> <th> Email </th> <th> Website </th> <th> Rating </th> <th> Toggle Favorite </th> </tr> </thead>'    
 
               document.getElementById("table").innerHTML += '<tbody id="tb"></tbody>'    
               document.getElementById("businessesTitle").innerHTML = "Businesses:";
@@ -195,7 +195,7 @@
                             // Write a row in the table for the matched business
                             document.getElementById("tb").innerHTML += '<tr id="' + business_name.split(' ').join('_') + '_row"></tr>' 
                             document.getElementById(business_name.split(' ').join('_')+ "_row").innerHTML = ""
-                            document.getElementById(business_name.split(' ').join('_') + '_row').innerHTML += '<td>' + line_arr[header_index['name']] + '</td>' + '<td>' + line_arr[header_index['search_term']] + '</td>' + '<td>' + line_arr[header_index['service']] + '</td>' +'<td>' + line_arr[header_index['location']] + '</td>' + '<td>' + line_arr[header_index['phone']] + '</td>' + '<td>' + line_arr[header_index['email']] + '</td>' + '<td>' + line_arr[header_index['website']] + '</td>'+ '<td>' + line_arr[header_index['rating']] + '</td>'
+                            document.getElementById(business_name.split(' ').join('_') + '_row').innerHTML += '<td>' + line_arr[header_index['name']] + '</td>' + '<td>' + line_arr[header_index['search_term']] + '</td>' + '<td>' + line_arr[header_index['service']] + '</td>' +'<td>' + line_arr[header_index['location']] + '</td>' + '<td>' + line_arr[header_index['phone']] + '</td>' + '<td>' + line_arr[header_index['fax']] + '</td>' + '<td>' + line_arr[header_index['email']] + '</td>' + '<td>' + line_arr[header_index['website']] + '</td>'+ '<td>' + line_arr[header_index['rating']] + '</td>'
                             
                             if(favorites.includes(business_name.split(' ').join('_'))){
                               document.getElementById(business_name.split(' ').join('_') + '_row').innerHTML += '<td> <button type="button" class="btn btn-secondary" id="' + business_name.split(' ').join('_') + '_fav" onclick=\"removeFavorite(\'' + business_name + '\')\">Remove Favorite</button> </td>'
