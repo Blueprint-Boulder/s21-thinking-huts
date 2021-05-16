@@ -1,0 +1,108 @@
+.button {
+  display: inline-flex;
+  font-size: 12px;
+  letter-spacing: 0px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+  text-decoration: none;
+  background-color: #fff;
+  color: #727cf5;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  justify-content: center;
+  padding: 16px 50px;
+  height: 48px;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+}
+
+.button-shadow {
+  position: relative;
+}
+
+.button::before {
+  border-radius: 2px;
+}
+
+.button-shadow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 8px 24px rgba(32, 43, 54, 0.12);
+  mix-blend-mode: multiply;
+  transition: box-shadow .15s ease;
+}
+
+.button-shadow:hover::before {
+  box-shadow: 0 8px 24px rgba(32, 43, 54, 0.25);
+}
+
+.button-primary {
+  color: #fff;
+  background: #727cf5;
+  background: linear-gradient(65deg, #727cf5 -25%, #727cf5 100%)
+}
+
+.button-primary:hover {
+  color: #fff;
+  background: #747ef5;
+  background: linear-gradient(65deg, #747ef5 -25%, #747ef5 100%)
+}
+
+.button-cta {
+  background: #ff796a;
+  background: linear-gradient(65deg, #FF9083 0, #FF6250 100%);
+  color: #fff;
+}
+
+.button-cta:hover {
+  background: #ff7e6f;
+  background: linear-gradient(65deg, #ff9588 0, #ff6755 100%);
+  color: #fff;
+
+}
+
+.button-inversed {
+  color: #5b6f82 !important;
+  background: #fff;
+  background: linear-gradient(65deg, #fff -25%, #fff 100%)
+}
+
+.button-inversed:hover {
+  color: #5b6f82 !important;
+  background: #fff;
+  background: linear-gradient(65deg, #fff -25%, #eee 100%)
+}
+
+.button-secondary {
+  background: #727cf5;
+  background: linear-gradient(65deg, #727cf5 -25%, #727cf5 100%);
+  color: #fff;
+  transition: background .15s ease;
+}
+
+.button-secondary:hover {
+  background: linear-gradient(65deg, #747ef5 -25%, #747ef5 100%);
+}
+
+.button-sm {
+  padding: 4px 10px;
+  height: 24px;
+  line-height: 16px;
+  font-size: 13px;
+  margin-left: 5px;
+}
+
+.button-sm.button-shadow::before {
+  box-shadow: 0 4px 16px rgba(32, 43, 54, 0.12)
+}
+
+.button-sm.button-shadow:hover::before {
+  box-shadow: 0 4px 16px rgba(32, 43, 54, 0.25)
+}

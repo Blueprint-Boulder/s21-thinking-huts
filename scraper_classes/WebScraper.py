@@ -3,7 +3,7 @@ import csv
 class WebScraper:
     def __init__(self, keywords):
         self.keywords = keywords
-        self.csv_columns = ['name', 'search_term', 'service', 'location', 'phone', 'email', 'website', 'latitude', 'longitude', 'rating']
+        self.csv_columns = ['name', 'search_term', 'service', 'location', 'phone', 'fax', 'email', 'website', 'latitude', 'longitude', 'rating']
         self.business_list = []
         self.filename = "madagascar-business.csv"
         self.url_list = []

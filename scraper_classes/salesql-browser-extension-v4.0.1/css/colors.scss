@@ -1,0 +1,101 @@
+$first-1: #EBF8FF;
+$first-2: #D1EEFC;
+$first-3: #A7D8F0;
+$first-4: #7CC1E4;
+$first-5: #55AAD4;
+$first-6: #3994C1;
+$first-7: #2D83AE;
+$first-8: #1D6F98;
+$first-9: #166086;
+$first-10: #0B4F71;
+
+// Greys
+$grey-1: #F5F7FA;
+$grey-2: #E4E7EB;
+$grey-3: #CBD2D9;
+$grey-4: #9AA5B1;
+$grey-5: #7B8794;
+$grey-6: #616E7C;
+$grey-7: #52606D;
+$grey-8: #3E4C59;
+$grey-9: #323F4B;
+$grey-10: #1F2933;
+
+// Secondary
+$second-1: #F2EBFE;
+$second-2: #DAC4FF;
+$second-3: #B990FF;
+$second-4: #A368FC;
+$second-5: #9446ED;
+$second-6: #8719E0;
+$second-7: #7A0ECC;
+$second-8: #690CB0;
+$second-9: #580A94;
+$second-10: #44056E;
+
+// Complementary
+$third-1: #FFE3EC;
+$third-2: #FFB8D2;
+$third-3: #FF8CBA;
+$third-4: #F364A2;
+$third-5: #E8368F;
+$third-6: #DA127D;
+$third-7: #BC0A6F;
+$third-8: #A30664;
+$third-9: #870557;
+$third-10: #620042;
+
+
+// New colors
+
+$primary-background: #F6F6F6;
+$primary-tint: #E7E9EA;
+$primary-mid: #B8BCC0;
+$primary-secondary-text: #888F97;
+$primary-main: #414C58;
+$primary-shadow: #313942;
+
+$primary-accent-tint: #ECECFF;
+$primary-accent-mid: #C7C7FF;
+$primary-accent-main: #6A69FF;
+$primary-accent-shadow: #504FBF;
+$primary-accent-background: #F2F2FF;
+
+$secondary-accent-tint: #ECFBF4;
+$secondary-accent-mid: #C6F2DD;
+$secondary-accent-main: #68DDA3;
+$secondary-accent-shadow: #4EA67A;
+
+$tertiary-accent-tint: #FFECEC;
+$tertiary-accent-mid: #FFC7C7;
+$tertiary-accent-main: #FF6A69;
+$tertiary-accent-shadow: #BF504F;
+
+$forth-accent-tint: #FFF6EC;
+$forth-accent-mid: #FFE3C7;
+$forth-accent-main: #FFB569;
+$forth-accent-shadow: #BF884F;
+
+$tag-accent-tint: #ECF5FF;
+$tag-accent-mid: #C7E2FF;
+$tag-accent-main: #69B3FF;
+$tag-accent-shadow: #4F86BF;
+
+:export {
+  primarySolid: $primary-accent-shadow;
+  primaryMid: $primary-accent-main;
+  primaryLight: $primary-accent-mid;
+  secondarySolid: $secondary-accent-shadow;
+  secondaryMid: $secondary-accent-main;
+  secondaryLight: $secondary-accent-mid;
+  tertiarySolid: $tertiary-accent-shadow;
+  tertiaryMid: $tertiary-accent-main;
+  tertiaryLight: $tertiary-accent-mid;
+  forthSolid: $forth-accent-shadow;
+  forthMid: $forth-accent-main;
+  forthLight: $forth-accent-mid;
+  tagSolid: $tag-accent-shadow;
+  tagMid: $tag-accent-main;
+  tagLight: $tag-accent-mid;
+  projectDefaultColor: $primary-accent-shadow;
+}

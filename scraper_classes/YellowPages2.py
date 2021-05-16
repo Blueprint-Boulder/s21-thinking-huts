@@ -10,9 +10,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import time
 import math
+import os
 
 class YellowPages2(WebScraper):
-    def __init__(self, keywords):
+    def __init__(self, keywords, chrome_driver_path='chromedriver-mac.exe'):
+        # uses mac version of chrome driver
+        self.chrome_driver_path = os.path.abspath(chrome_driver_path)
         super().__init__(keywords)
 
     def get_urls(self):
@@ -61,8 +64,7 @@ class YellowPages2(WebScraper):
         options.add_argument("--window-size=1920,1200")
 
         # TODO: insert path to chromedriver below i.e. <path to chromedriver>/chromedriver
-        DRIVER_PATH = # insert path to chromedriver here 
-        browser = webdriver.Chrome(executable_path=DRIVER_PATH, options = options)
+        browser = webdriver.Chrome(executable_path=self.chrome_driver_path , options = options)
         j = 0
         service = ""; 
 

@@ -1,0 +1,104 @@
+{
+  "name": "SalesQL Browser Extension",
+  "short_name": "SalesQL",
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "http://*/",
+    "https://*/",
+    "cookies",
+    "notifications",
+    "storage"
+  ],
+  "description": "Enrich business profiles with contact information, track and engage leads",
+  "version": "4.0.1",
+  "manifest_version": 2,
+  "icons": {
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  },
+  "browser_action": {
+    "default_title": "SalesQL Browser Extension",
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "scripts": [
+      "background/init.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "content/linkedinParser.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://*.linkedin.com/*"
+      ]
+    },
+    {
+      "js": [
+        "content/linkedin/free/init.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://*.linkedin.com/*"
+      ]
+    },
+    {
+      "js": [
+        "content/linkedin/recruiter/init.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://*.linkedin.com/recruiter/*"
+      ]
+    },
+    {
+      "js": [
+        "content/linkedin/rps/init.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://*.linkedin.com/talent/*"
+      ]
+    },
+    {
+      "js": [
+        "content/salesQL.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://*.salesql.com/*"
+      ]
+    },
+    {
+      "js": [
+        "content/salesQL.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://salesql.com/*"
+      ]
+    },
+    {
+      "js": [
+        "content/salesQL.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "http://localhost:3000/*"
+      ]
+    }
+  ],
+  "externally_connectable": {
+    "ids": [
+      "cfjibcdkigidepdccomfcjommghcdofg"
+    ],
+    "matches": [
+      "*://*.salesql.com/*",
+      "http://localhost:3000/*"
+    ]
+  }
+}
